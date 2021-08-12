@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_agenda/models/contact.dart';
+import 'package:google_agenda/provider/list_of_contacts.dart';
 import 'package:google_agenda/style.dart';
 
 class Home extends StatefulWidget {
@@ -18,7 +20,7 @@ class _HomeState extends State<Home> {
       ),
       body: ListView.separated(
         itemBuilder: builder,
-        itemCount: 10,
+        itemCount: listOfContacts.length,
         separatorBuilder: (_, index) {
           return Divider();
         },
@@ -27,41 +29,62 @@ class _HomeState extends State<Home> {
   }
 
   Widget builder(BuildContext _, int index) {
+    Contact _contact = listOfContacts.elementAt(index);
     return ListTile(
       leading: IconButton(
-        icon: Icon(Icons.star, color: blueTheme,), 
-        onPressed: () {},),
+        icon: (_contact.isFavorite)
+            ? Icon(
+                Icons.star,
+                color: blueTheme,
+              )
+            : Icon(
+                Icons.star_outline,
+                color: blueTheme,
+              ),
+        onPressed: () {
+          setState(() {
+            _contact.isFavorite = !_contact.isFavorite;
+          });
+        },
+      ),
       trailing: IconButton(
-        icon: Icon(Icons.chevron_right, color: grayTheme,), 
-        onPressed: () {},),
-        title: Row(
-          children: [
-            ClipOval(
-              child: Image.asset
-              ("assets/images/Nicole.jpg", 
-              width: 50, 
+        icon: Icon(
+          Icons.chevron_right,
+          color: grayTheme,
+        ),
+        onPressed: () {},
+      ),
+      title: Row(
+        children: [
+          ClipOval(
+            child: Image.asset(
+              _contact.photo,
+              width: 50,
               height: 50,
               fit: BoxFit.cover,
-              ),
             ),
-            SizedBox(width: 20,),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Nicole Soares", 
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _contact.name,
                 style: TextStyle(
-                  fontWeight: FontWeight.bold, 
-                  fontSize: 14, 
-                  color: grayTheme),
-                ),
-                Text("51 99422-7785", 
-                style: TextStyle(
-                  fontSize: 10),
-                ),
-              ],
-            )
-          ],
-        ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: grayTheme),
+              ),
+              Text(
+                _contact.phone,
+                style: TextStyle(fontSize: 10),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
